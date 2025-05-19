@@ -1,0 +1,59 @@
+name: Telegram Message Collector
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Runs every day at midnight
+  workflow_dispatch:
+
+jobs:
+  collect-messages:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+
+    - name: Install dependencies
+      run: |
+        pip install telethon
+        pip install nest_asyncio
+        pip install pandas
+        pip install tqdm
+
+    - name: Run Telegram Message Retrieval
+      run: |
+        python -c "
+        from telethon.sync import TelegramClient
+        from telethon.tl.functions.users import GetFullUserRequest
+        from telethon.tl.types import User, Message, PeerChannel, PeerChat, PeerUser
+        import os
+        import configparser
+        import pandas as pd
+        from tqdm.notebook import tqdm
+        from pathlib import Path
+        import nest_asyncio
+        nest_asyncio.apply()
+        custom_await = lambda x: asyncio.get_event_loop().run_until_complete(x)
+        config_path = os.path.join('gdrive', 'MyDrive', 'Colab_Data', 'Configs')
+        data_path = os.path.join('gdrive', 'MyDrive', 'Colab_Data', 'Data', 'Telegram')
+        config = configparser.ConfigParser()
+        config.read(os.path.join(config_path, 'telegram_config.ini'))
+        api_id = int(config['Telegram']['api_id'])
+        api_hash = str(config['Telegram']['api_hash'])
+        phone = config['Telegram']['phone']
+        client = custom_await(TelegramClient('session_name', api_id, api_hash).start(phone))
+        async def get_messages(client, entity, limit):
+            messages = []
+            async for message in client.iter_messages(entity, limit=limit):
+                messages.append(message.to_dict())
+            return messages
+        messages = custom_await(get_messages(client, 'PavelDurov', 1000))
+        df = pd.DataFrame(messages)
+        df.to_csv(os.path.join(data_path, 'PavelDurov_messages.csv'), sep='\t', index=None)
+        custom_await(client.disconnect())
+        "
