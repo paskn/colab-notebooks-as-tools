@@ -52,8 +52,8 @@ jobs:
             async for message in client.iter_messages(entity, limit=limit):
                 messages.append(message.to_dict())
             return messages
-        messages = custom_await(get_messages(client, 'PavelDurov', 1000))
+        messages = custom_await(get_messages(client, 'durov', 1000))
         df = pd.DataFrame(messages)
-        df.to_csv(os.path.join(data_path, 'PavelDurov_messages.csv'), sep='\t', index=None)
+        df.to_csv(os.path.join(data_path, 'durov_messages.csv'), sep='\t', index=None)
         custom_await(client.disconnect())
         "

@@ -15,7 +15,7 @@ The following tools are currently available:
 
 ## GitHub Actions Pipeline for Telegram Message Collection
 
-This repository includes a GitHub Actions pipeline to collect messages from the public channel of PavelDurov on Telegram. The collected messages are stored in the `gdrive/MyDrive/Colab_Data/Data/Telegram` directory in the user's Google Drive.
+This repository includes a GitHub Actions pipeline to collect messages from the public channel of durov on Telegram. The collected messages are stored in the `gdrive/MyDrive/Colab_Data/Data/Telegram` directory in the user's Google Drive.
 
 ### How to Run the Pipeline
 
@@ -40,5 +40,4 @@ This repository includes a GitHub Actions pipeline to collect messages from the 
 
 ### Workflow File
 
-The GitHub Actions workflow file is located at `/.github/workflows/telegram-message-collector.yml`. It uses the existing code in `Telegram Message Retrieval.ipynb` to retrieve messages from the public channel of PavelDurov.
-
+The GitHub Actions workflow file is located at `/.github/workflows/telegram-message-collector.yml`. It uses the existing code in `Telegram Message Retrieval.ipynb` to retrieve messages from the public channel of durov.
